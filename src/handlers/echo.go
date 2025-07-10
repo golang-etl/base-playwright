@@ -13,6 +13,7 @@ import (
 	"github.com/golang-etl/base-playwright/src/providers/login"
 	packagegeneralutils "github.com/golang-etl/package-general/src/utils"
 	packageusertokenmodels "github.com/golang-etl/package-user-token/src/models"
+	"github.com/golang-etl/package-user-token/src/providers/usertoken"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -36,10 +37,11 @@ func main() {
 
 	userTokenModel := packageusertokenmodels.UserTokenModel{Client: mainDB.Client, Secret: cfg.SecretKeyUserTokenData, Database: cfg.MongoDBDatabaseName}
 
+	userTokenProvider := usertoken.UserTokenProvider{UserTokenModel: userTokenModel}
 	browserProvider := browser.BrowserProvider{Cfg: cfg}
 	contextProvider := context.ContextProvider{Cfg: cfg, BrowserProvider: &browserProvider}
 	healthProvider := health.HealthProvider{CfgGoModuleName: cfg.GoModuleName, CfgDebug: cfg.Debug, MongoClient: mainDB.Client}
-	loginProvider := login.LoginProvider{CfgGoModuleName: cfg.GoModuleName, CfgDebug: cfg.Debug, Validator: mainValidator, UserTokenModel: userTokenModel, ContextProvider: contextProvider}
+	loginProvider := login.LoginProvider{CfgGoModuleName: cfg.GoModuleName, CfgDebug: cfg.Debug, Validator: mainValidator, UserTokenModel: userTokenModel, ContextProvider: contextProvider, UserTokenProvider: userTokenProvider}
 
 	browserProvider.OpenBrowser()
 	defer browserProvider.CloseAll()

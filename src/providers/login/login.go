@@ -11,14 +11,16 @@ import (
 	packagehttpinterfaces "github.com/golang-etl/package-http/src/interfaces"
 	packagehttputils "github.com/golang-etl/package-http/src/utils"
 	packageusertokenmodels "github.com/golang-etl/package-user-token/src/models"
+	"github.com/golang-etl/package-user-token/src/providers/usertoken"
 )
 
 type LoginProvider struct {
-	CfgGoModuleName string
-	CfgDebug        bool
-	Validator       *validator.Validate
-	UserTokenModel  packageusertokenmodels.UserTokenModel
-	ContextProvider context.ContextProvider
+	CfgGoModuleName   string
+	CfgDebug          bool
+	Validator         *validator.Validate
+	UserTokenModel    packageusertokenmodels.UserTokenModel
+	ContextProvider   context.ContextProvider
+	UserTokenProvider usertoken.UserTokenProvider
 }
 
 func (provider LoginProvider) GetLogin(shared *packagegeneralinterfaces.Shared, originalInputData logininterfaces.InputData) packagehttpinterfaces.Response {
